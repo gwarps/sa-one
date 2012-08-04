@@ -1,7 +1,11 @@
 class Movie < ActiveRecord::Base
- def self.sorted_data(sort_by=nil)
-   return Movie.order(sort_by)
+ def self.sort_rate(ratings,sort_by)
+  keys = []
+  keys = ratings.keys if !ratings.nil?
+  data = Movie.where(:rating=>keys)
+  return data.order(sort_by)
  end
+ 
 
  def self.rating_list
   rating = Movie.select("distinct(rating)").order(:rating)
