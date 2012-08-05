@@ -10,6 +10,20 @@ class MoviesController < ApplicationController
     sort_by = params[:sort_by]
     @ratings = params[:ratings]
     #@movies = Movie.all
+    if @ratings.nil?
+	    if params[:commit].eql?("Refresh")
+		    session.delete(:ratings)
+		    session.delete(:sort_by) if !session[:sort_by].nil?
+		    redirect_to movies_path
+	    end
+	    @ratings = session[:ratings]
+	    sort_by = session[:sort_by]
+	    if !@ratings.nil?
+		    redirect_to movies_path(:ratings=>@ratings,:sort_by=>sort_by)
+	    end
+    end
+    session[:ratings] = @ratings
+    session[:sort_by] = sort_by
     @movies = Movie.sort_rate(@ratings,sort_by)
     @all_ratings = Movie.rating_list
   end
